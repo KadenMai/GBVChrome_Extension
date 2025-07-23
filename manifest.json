@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Hello World Extension",
+  "version": "1.0",
+  "description": "A simple Chrome extension that says Hello World.",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon32.png",
+      "128": "icons/icon64.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.veeqo.com/orders*"],
+      "js": ["content/veeqo_inject.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://cnsb.usps.com/label-manager/new-label/quick*"],
+      "js": ["content/usps_fill.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://cnsb.usps.com/label-manager/new-label/quick*"
+  ]
+} 
