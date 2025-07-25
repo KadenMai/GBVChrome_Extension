@@ -18,14 +18,7 @@ setTimeout(() => {
     const address = info.shippingAddress;
     setValue('firstName', address[0]?.split(' ')[0] || '');
     setValue('lastName', address[0]?.split(' ').slice(1).join(' ') || '');
-    const streetInput = document.querySelector("#root > main > div > div.row > div:nth-child(1) > div:nth-child(4) > div > div:nth-child(7) > div.col-md-9.col-12 > div > div:nth-child(1) > input.rbt-input-main.form-control.rbt-input.undefined");
-    if (streetInput) {
-      streetInput.value = address[1] || '';
-      streetInput.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-    setValue('city', address[2] || '');
-    setValue('state', address[3] || '');
-    setValue('zipCode', address[4] || '');
+   
 
     // Package info
     if (info.packageWeight) {
@@ -48,5 +41,18 @@ setTimeout(() => {
     // Fill reference numbers
     if (info.orderNumber) setValue('referenceNumber', info.orderNumber);
     if (info.itemInfo) setValue('referenceNumber2', info.itemInfo);
+
+
+    setValue('city', address[2] || '');
+    setValue('state', address[3] || '');
+    setValue('zipCode', address[4] || '');
+
+
+    const streetInput = document.querySelector("#root > main > div > div.row > div:nth-child(1) > div:nth-child(4) > div > div:nth-child(7) > div.col-md-9.col-12 > div > div:nth-child(1) > input.rbt-input-main.form-control.rbt-input.undefined");
+    if (streetInput) {
+      streetInput.value = address[1] || '';
+      streetInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
   });
-}, 10000); 
+}, 5000); 
