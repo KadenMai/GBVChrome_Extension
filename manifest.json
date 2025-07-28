@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://app.veeqo.com/orders*"],
-      "js": ["content/veeqo_inject.js"],
+      "js": ["content/veeqo_order_handler.js", "content/veeqo_inject.js"],
       "run_at": "document_idle"
     },
     {
