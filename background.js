@@ -11,4 +11,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'get_shipping_info') {
     sendResponse({ shippingInfo: lastShippingInfo });
   }
+  if (request.action === 'open_amazon_tab') {
+    // Open Amazon tab with the provided URL
+    chrome.tabs.create({ url: request.url });
+  }
 }); 

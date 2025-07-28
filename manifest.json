@@ -21,15 +21,26 @@
       "matches": ["https://cnsb.usps.com/label-manager/new-label/quick*"],
       "js": ["content/usps_fill.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://cnsb.usps.com/confirmation-page*",
+        "https://sellercentral.amazon.com/orders-v3/order/*"
+      ],
+      "js": ["content/usps_confirmation_handler.js"],
+      "run_at": "document_idle"
     }
   ],
   "background": {
     "service_worker": "background.js"
   },
   "permissions": [
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "host_permissions": [
-    "https://cnsb.usps.com/label-manager/new-label/quick*"
+    "https://cnsb.usps.com/label-manager/new-label/quick*",
+    "https://cnsb.usps.com/confirmation-page*",
+    "https://sellercentral.amazon.com/orders-v3/order/*"
   ]
 } 
