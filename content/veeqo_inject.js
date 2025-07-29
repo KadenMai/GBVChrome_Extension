@@ -21,6 +21,7 @@ function addButtonsToSpacerColumn() {
         const btn = document.createElement('button');
         btn.textContent = 'GBV Action';
         btn.className = 'gbv-extension-btn';
+        btn.style.cssText = 'padding: 10px;color: blue;border-radius: 5px;font-weight: bold;';
         btn.onclick = () => handleOrderAction(row);
         cell.appendChild(btn);
       }
