@@ -1,4 +1,35 @@
 // Order handling functionality for Veeqo extension
+
+// Parse street address to separate street and apartment/unit
+function parseStreetAddress(fullAddress) {
+  if (!fullAddress) return { street: '', apartment: '' };
+  
+  // Common apartment/unit indicators
+  const aptPatterns = [
+    /(.*?)\s+(Apt|Apartment|Unit|Suite|Ste|#|No|Number)\s*\.?\s*(.+)/i,
+    /(.*?)\s+(Floor|Fl|Level|Lvl)\s*\.?\s*(.+)/i,
+    /(.*?)\s+(Building|Bldg)\s*\.?\s*(.+)/i,
+    /(.*?)\s+(Room|Rm)\s*\.?\s*(.+)/i
+  ];
+  
+  // Try each pattern
+  for (const pattern of aptPatterns) {
+    const match = fullAddress.match(pattern);
+    if (match) {
+      return {
+        street: match[1].trim(),
+        apartment: `${match[2]} ${match[3]}`.trim()
+      };
+    }
+  }
+  
+  // If no pattern matches, return the full address as street
+  return {
+    street: fullAddress.trim(),
+    apartment: ''
+  };
+}
+
 function handleOrderAction(row) {
   // Try to find the <button> with class containing 'act-react-listing-row-item-name' in the row
   let orderBtn = row.querySelector('button[class*="act-react-listing-row-item-name"]');
@@ -66,11 +97,25 @@ function handleOrderAction(row) {
       if (addressTable) {
         const addressTd = addressTable.querySelector('td.order-summary-address-details');
         if (addressTd) {
+          // Collect all address lines
+          let addressLines = [];
           addressTd.querySelectorAll('.fs-exclude').forEach(div => {
             const a = div.querySelector('a');
             const text = a ? a.textContent.trim() : div.textContent.trim();
-            if (text) shippingAddress.push(text);
+            if (text) addressLines.push(text);
           });
+          // addressLines[0] is usually the recipient name
+          // addressLines[1] is the full street address (may include apt/unit)
+          // addressLines[2] is city, [3] is state, [4] is zip, etc.
+          shippingAddress.push(addressLines[0] || ''); // recipient
+          // Parse street/apartment
+          const parsed = parseStreetAddress(addressLines[1] || '');
+          shippingAddress.push(parsed.street || ''); // address1
+          shippingAddress.push(parsed.apartment || ''); // address2
+          // Add the rest (city, state, zip, etc.)
+          for (let i = 2; i < addressLines.length; ++i) {
+            shippingAddress.push(addressLines[i]);
+          }
         }
       }
 
@@ -123,5 +168,5 @@ function handleOrderAction(row) {
 
 // Export the function for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { handleOrderAction };
+  module.exports = { handleOrderAction, parseStreetAddress };
 } 
