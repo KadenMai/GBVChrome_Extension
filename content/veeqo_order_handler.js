@@ -31,6 +31,8 @@ function parseStreetAddress(fullAddress) {
 }
 
 function handleOrderAction(row) {
+  
+  // ========Work on each row========
   // Try to find the <button> with class containing 'act-react-listing-row-item-name' in the row
   let orderBtn = row.querySelector('button[class*="act-react-listing-row-item-name"]');
   let searchRow = row;
@@ -52,6 +54,27 @@ function handleOrderAction(row) {
     }
   }
 
+  // Extract Current Service Price from span with act-current-service-price class
+  let currentServicePrice = '';
+  const servicePriceSpan = row.querySelector('span[class*="act-current-service-price"]');
+  if (servicePriceSpan) {
+    currentServicePrice = servicePriceSpan.textContent.trim();
+  }
+
+  // Extract package weight from the correct class
+  let pkgWeight = '';
+  const weightSpan = row.querySelector('span.productDimensions.package__weight');
+  if (weightSpan) {
+    pkgWeight = weightSpan.textContent.trim();
+  }
+  // Extract package dimensions from the correct class
+  let pkgDimensionsFromRow = '';
+  const dimSpan = row.querySelector('span.productDimensions.package__dimensions');
+  if (dimSpan) {
+    pkgDimensionsFromRow = dimSpan.textContent.trim();
+  }
+
+  // ========Work on each order========
   if (orderBtn) {
     orderBtn.click();
     setTimeout(() => {
@@ -124,20 +147,7 @@ function handleOrderAction(row) {
       const pkgBtn = document.querySelector('button.packages_options_button');
       if (pkgBtn) {
         pkgDimensions = pkgBtn.querySelector('.package__dimensions')?.textContent.trim() || '';
-      }
-
-      // Extract package weight from the correct class
-      let pkgWeight = '';
-      const weightSpan = row.querySelector('span.productDimensions.package__weight');
-      if (weightSpan) {
-        pkgWeight = weightSpan.textContent.trim();
-      }
-      // Extract package dimensions from the correct class
-      let pkgDimensionsFromRow = '';
-      const dimSpan = row.querySelector('span.productDimensions.package__dimensions');
-      if (dimSpan) {
-        pkgDimensionsFromRow = dimSpan.textContent.trim();
-      }
+      }      
 
       // Extract Expected delivery from order-header__sub-title
       let expectedDelivery = '';
@@ -150,13 +160,7 @@ function handleOrderAction(row) {
         }
       }
 
-      // Extract Current Service Price from span with act-current-service-price class
-      let currentServicePrice = '';
-      const servicePriceSpan = document.querySelector('span[class*="act-current-service-price"]');
-      if (servicePriceSpan) {
-        currentServicePrice = servicePriceSpan.textContent.trim();
-      }
-
+      
       const shippingInfo = {
         orderNumber,
         itemInfo: sku_info,

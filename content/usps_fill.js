@@ -1,3 +1,10 @@
+// Set the timeout values for easier management
+const addressSuggestion_WaitTime = 2000;
+const apartmentFill_WaitTime = 500;
+const packageType_WaitTime = 500;
+const packageDimensions_WaitTime = 300;
+const mainScript_WaitTime = 5000;
+
 // Request shipping info from the background script
 setTimeout(() => {
   chrome.runtime.sendMessage({ action: 'get_shipping_info' }, (response) => {
@@ -30,16 +37,20 @@ setTimeout(() => {
     const expectedDelivery = info.expectedDelivery;
     const currentServicePrice = info.currentServicePrice;
 
-    let divTotal = document.getElementById('addToCartButton').parentNode.parentNode;
-    // Add expected delivery and service price to the divTotal
-    divTotal.innerHTML += `<div><div>Expected Delivery: ${expectedDelivery}</div><div>Current Service Price: ${currentServicePrice}</div></div>`;
+    let divInfo = document.querySelector('svg[title="Info Icon"]').parentNode.children[1];
+    console.log('[GBV Extension] Get divInfo:', divInfo.innerHTML);
+    //document.getElementById('addToCartButton').parentNode.parentNode.children[2];
+    // Add expected delivery and service price to the divInfo
+    divInfo.innerHTML += `<p>Address: ${address.join(', ')}</p><p>Expected Delivery: ${expectedDelivery}</p><p>Current Service Price: ${currentServicePrice}</p>`;
 
     // Package info
+    console.log('[GBV Extension] Getting packageWeight:', info.packageWeight);
     if (info.packageWeight) {
-      const weightMatch = info.packageWeight.match(/(\d+)\s*lbs?\s*(\d+)?\s*oz?/i);
+      const weightMatch = info.packageWeight.match(/(\d+)\s*lbs?\s*(\d+(?:\.\d+)?)?\s*oz?/i);
       if (weightMatch) {
-        setValue('weightLbs', weightMatch[1] || '');
-        setValue('weightOzs', weightMatch[2] || '');
+        console.log('[GBV Extension] Fill packageWeight:', info.packageWeight);
+        setValue('weightLbs', Math.floor(Number(weightMatch[1])) || '');
+        setValue('weightOzs', Math.floor(Number(weightMatch[2])) || '');
       }
     }
 
@@ -105,7 +116,7 @@ setTimeout(() => {
                   console.log('[GBV Extension] Filled package dimensions');
                 }
               }
-            }, 300);
+            }, packageDimensions_WaitTime);
           } else {
             console.log('[GBV Extension] Custom Packaging option not found');
           }
@@ -149,10 +160,10 @@ setTimeout(() => {
                   console.log('[GBV Extension] Apartment field not found, apartment info:', address[2]);
                 }
               }
-            }, 500);
-          }, 1000);
+            }, apartmentFill_WaitTime);
+          }, addressSuggestion_WaitTime);
         }      
-      }, 300);
+      }, packageType_WaitTime);
     }
   });
-}, 3000); 
+}, mainScript_WaitTime); 
