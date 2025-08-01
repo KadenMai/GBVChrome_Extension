@@ -139,6 +139,24 @@ function handleOrderAction(row) {
         pkgDimensionsFromRow = dimSpan.textContent.trim();
       }
 
+      // Extract Expected delivery from order-header__sub-title
+      let expectedDelivery = '';
+      const subTitleDiv = document.querySelector('div.order-header__sub-title');
+      if (subTitleDiv) {
+        const text = subTitleDiv.textContent;
+        const deliveryMatch = text.match(/Expected delivery on ([^&\s]+(?:\s+[^&\s]+)*)/);
+        if (deliveryMatch) {
+          expectedDelivery = deliveryMatch[1].trim();
+        }
+      }
+
+      // Extract Current Service Price from span with act-current-service-price class
+      let currentServicePrice = '';
+      const servicePriceSpan = document.querySelector('span[class*="act-current-service-price"]');
+      if (servicePriceSpan) {
+        currentServicePrice = servicePriceSpan.textContent.trim();
+      }
+
       const shippingInfo = {
         orderNumber,
         itemInfo: sku_info,
@@ -146,15 +164,19 @@ function handleOrderAction(row) {
         shippingAddress,
         packageWeight: pkgWeight,
         packageDimensions: pkgDimensionsFromRow,
+        expectedDelivery,
+        currentServicePrice,
       };
 
-      // Show alert with all info, including sku_info
+      // Show alert with all info, including sku_info, expected delivery, and service price
       alert(
         `Order Number: ${orderNumber}\n` +
         `Order Id: ${orderId}\n` +
         `Shipping Address: ${shippingAddress ? shippingAddress.join(', ') : ''}\n` +
         `Package Weight: ${pkgWeight}\n` +
         `Package Dimensions: ${pkgDimensionsFromRow}\n` +
+        `Expected Delivery: ${expectedDelivery}\n` +
+        `Current Service Price: ${currentServicePrice}\n` +
         `SKU Info: ${sku_info}`
       );
 

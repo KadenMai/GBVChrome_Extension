@@ -16,10 +16,23 @@ setTimeout(() => {
 
     // Parse address fields
     const address = info.shippingAddress;
+    let firstName = address[0]?.split(' ')[0] || '';
+    let lastName = address[0]?.split(' ').slice(1).join(' ') || '';
     setValue('firstName', address[0]?.split(' ')[0] || '');
-    setValue('lastName', address[0]?.split(' ').slice(1).join(' ') || '');
+    if (lastName) {
+      setValue('lastName', lastName);
+    }
+    else {
+      setValue('lastName', '.');
+    }
     
-    
+    // Get expected delivery and service price information
+    const expectedDelivery = info.expectedDelivery;
+    const currentServicePrice = info.currentServicePrice;
+
+    let divTotal = document.getElementById('addToCartButton').parentNode.parentNode;
+    // Add expected delivery and service price to the divTotal
+    divTotal.innerHTML += `<div><div>Expected Delivery: ${expectedDelivery}</div><div>Current Service Price: ${currentServicePrice}</div></div>`;
 
     // Package info
     if (info.packageWeight) {
@@ -38,6 +51,14 @@ setTimeout(() => {
     // Fill reference numbers
     if (info.orderNumber) setValue('referenceNumber', info.orderNumber);
     if (info.itemInfo) setValue('referenceNumber2', info.itemInfo);
+
+    // Log and display expected delivery and service price information
+    if (info.expectedDelivery) {
+      console.log('[GBV Extension] Expected Delivery:', info.expectedDelivery);
+    }
+    if (info.currentServicePrice) {
+      console.log('[GBV Extension] Current Service Price:', info.currentServicePrice);
+    }
 
 
     setValue('city', address[3] || '');
@@ -102,6 +123,7 @@ setTimeout(() => {
             const suggestionMenu = document.querySelector('#address-suggestion');
             if (suggestionMenu && zipCode) {
               const items = suggestionMenu.querySelectorAll('a.dropdown-item');
+              console.log('[GBV Extension] List of suggestions:', items);
               let found = false;
               items.forEach(item => {
                 if (item.textContent.includes(zipCode)) {
@@ -132,24 +154,5 @@ setTimeout(() => {
         }      
       }, 300);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   });
 }, 3000); 
