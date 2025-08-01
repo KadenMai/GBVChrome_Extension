@@ -143,8 +143,55 @@ setTimeout(() => {
                   console.log('[GBV Extension] Picked address suggestion:', item.textContent.trim());
                 }
               });
-              if (!found) {
+              if (!found) { // If no address suggestion matches zip code, pick the correct State element
                 console.log('[GBV Extension] No address suggestion matches zip code:', zipCode);
+
+                // Pick the correct State element
+                const stateInput = document.querySelector('#state');
+                if (stateInput && address[4]) {
+                  const stateValue = address[4].trim();
+                  console.log('[GBV Extension] Looking for state:', stateValue);
+                  
+                  // Get all options in the state combobox
+                  const options = Array.from(stateInput.querySelectorAll('option'));
+                  let selectedOption = null;
+                  
+                  // Try to find matching option by comparing with both state code and state name
+                  for (const option of options) {
+                    const optionText = option.textContent.trim();
+                    console.log('[GBV Extension] Checking option:', optionText);
+                    
+                    // Check if the option text contains the state value (case insensitive)
+                    if (optionText.toLowerCase().includes(stateValue.toLowerCase())) {
+                      selectedOption = option;
+                      console.log('[GBV Extension] Found matching state option:', optionText);
+                      break;
+                    }
+                    
+                    // Also check if the state value contains any part of the option text
+                    const optionParts = optionText.split(' - ');
+                    if (optionParts.length >= 2) {
+                      const stateCode = optionParts[0].trim();
+                      const stateName = optionParts[1].trim();
+                      
+                      if (stateValue.toLowerCase() === stateCode.toLowerCase() || 
+                          stateValue.toLowerCase() === stateName.toLowerCase()) {
+                        selectedOption = option;
+                        console.log('[GBV Extension] Found matching state option:', optionText);
+                        break;
+                      }
+                    }
+                  }
+                  
+                  if (selectedOption) {
+                    stateInput.value = selectedOption.value;
+                    stateInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    console.log('[GBV Extension] Selected state:', selectedOption.textContent);
+                  } else {
+                    console.log('[GBV Extension] No matching state found for:', stateValue);
+                  }
+                }
+                
               }
             }
     
