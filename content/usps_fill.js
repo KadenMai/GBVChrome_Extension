@@ -50,7 +50,12 @@ setTimeout(() => {
       if (weightMatch) {
         console.log('[GBV Extension] Fill packageWeight:', info.packageWeight);
         setValue('weightLbs', Math.floor(Number(weightMatch[1])) || '');
-        setValue('weightOzs', Math.floor(Number(weightMatch[2])) || '');
+        // If ozs is null/empty, fill 0
+        let ozs = weightMatch[2];
+        if (ozs === undefined || ozs === null || ozs === '' || isNaN(Number(ozs))) {
+          ozs = 0;
+        }
+        setValue('weightOzs', Math.floor(Number(ozs)));
       }
     }
 
@@ -208,6 +213,16 @@ setTimeout(() => {
                 }
               }
             }, apartmentFill_WaitTime);
+            // After all data is filled, click the getRatesButton
+            setTimeout(() => {
+              const getRatesBtn = document.getElementById('getRatesButton');
+              if (getRatesBtn) {
+                getRatesBtn.click();
+                console.log('[GBV Extension] Clicked getRatesButton');
+              } else {
+                console.log('[GBV Extension] getRatesButton not found');
+              }
+            }, apartmentFill_WaitTime + 200); // Wait a bit after filling apartment/unit
           }, addressSuggestion_WaitTime);
         }      
       }, packageType_WaitTime);
