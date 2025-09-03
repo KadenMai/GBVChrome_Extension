@@ -103,9 +103,7 @@ setTimeout(() => {
             console.log(`[GBV Extension] Item ${i}:`, JSON.stringify(a.textContent.trim()));
           });
           // Use a more flexible match for "Custom Packaging"
-          const customOption = items.find(a =>
-            a.textContent.replace(/\s+/g, ' ').toLowerCase().includes('custom packaging')
-          );
+          const customOption = items[1];
           if (customOption) {
             customOption.click();
             console.log('[GBV Extension] Clicked Custom Packaging option');
@@ -136,7 +134,7 @@ setTimeout(() => {
           // Wait 1000ms after filling street, then click packageTypeDropdown button
           setTimeout(() => {       
             // After filling street, pick the address suggestion that matches the 5-digit zip code
-            const suggestionMenu = document.querySelector('#address-suggestion');
+            const suggestionMenu = document.querySelector('div#streetAddress1');
             if (suggestionMenu && zipCode) {
               const items = suggestionMenu.querySelectorAll('a.dropdown-item');
               console.log('[GBV Extension] List of suggestions:', items);
@@ -152,7 +150,8 @@ setTimeout(() => {
                 console.log('[GBV Extension] No address suggestion matches zip code:', zipCode);
 
                 // Pick the correct State element
-                const stateInput = document.querySelector('#state');
+                console.log('[GBV Extension] Get List of States from quick-flow-state');
+                const stateInput = document.querySelector('select#quick-flow-state');
                 if (stateInput && address[4]) {
                   const stateValue = address[4].trim();
                   console.log('[GBV Extension] Looking for state:', stateValue);

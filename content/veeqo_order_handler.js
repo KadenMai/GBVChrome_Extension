@@ -75,7 +75,11 @@ function handleOrderAction(row) {
   }
 
   // ========Work on each order========
-  if (orderBtn) {
+  if (
+    orderBtn &&
+    pkgWeight &&
+    pkgDimensionsFromRow
+  ) {
     orderBtn.click();
     setTimeout(() => {
       // Extract Order Number from <h1> title attribute inside <div class="container-name span6">
