@@ -1,10 +1,16 @@
 // USPS Confirmation Page Handler
 // Adds "Update Shipment" buttons to the Label Number column
 
+
 function addUpdateShipmentButtons() {
   // Find the table containing shipping labels
-  const table = document.querySelector('table.sc-fnxfcy.gIyzvi.table');
-  if (!table) return;
+  const table = document.querySelector('table[aria-label="Payment Confirmation Table"]');
+  console.log('[GBV Extension] Found table:', table);
+  if (!table) 
+    {
+      console.log('[GBV Extension] Table not found');
+      return;
+    }
 
   // Find all rows in the table body
   const rows = table.querySelectorAll('tbody tr');
@@ -153,10 +159,20 @@ function waitForTrackingInput() {
 // Initialize based on current page
 if (window.location.href.includes('cnsb.usps.com/confirmation-page')) {
   // USPS confirmation page
-  // Wait for the table to load
+  console.log('[GBV Extension] USPS confirmation page detected');
+  
+  // Wait for the table to load with multiple approaches
+  let tableFound = false;
+  
+  // Approach 1: Try immediately
+  addUpdateShipmentButtons();
+  
+  // Approach 2: Use MutationObserver to watch for table
   const observer = new MutationObserver(() => {
-    const table = document.querySelector('table.sc-fnxfcy.gIyzvi.table');
-    if (table) {
+    const table = document.querySelector('table[aria-label="Payment Confirmation Table"]');
+    if (table && !tableFound) {
+      console.log('[GBV Extension] Table found via MutationObserver');
+      tableFound = true;
       addUpdateShipmentButtons();
       observer.disconnect();
     }
@@ -164,8 +180,19 @@ if (window.location.href.includes('cnsb.usps.com/confirmation-page')) {
   
   observer.observe(document.body, { childList: true, subtree: true });
   
-  // Also try immediately in case table is already present
-  addUpdateShipmentButtons();
+  // Approach 3: Fallback timeout to ensure we try again
+  setTimeout(() => {
+    if (!tableFound) {
+      console.log('[GBV Extension] Fallback timeout - trying to add buttons again');
+      addUpdateShipmentButtons();
+    }
+  }, 2000);
+  
+  // Approach 4: Additional timeout for slower loading
+  setTimeout(() => {
+    console.log('[GBV Extension] Final timeout - trying to add buttons one more time');
+    addUpdateShipmentButtons();
+  }, 5000);
   
 } else if (window.location.href.includes('sellercentral.amazon.com/orders-v3/order/')) {
   // Amazon confirm shipment page

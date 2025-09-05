@@ -29,6 +29,13 @@
       ],
       "js": ["content/usps_confirmation_handler.js"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://cnsb.usps.com/history/orders/*"
+      ],
+      "js": ["content/usps_history_handler.js"],
+      "run_at": "document_idle"
     }
   ],
   "background": {
@@ -41,6 +48,7 @@
   "host_permissions": [
     "https://cnsb.usps.com/label-manager/new-label/quick*",
     "https://cnsb.usps.com/confirmation-page*",
+    "https://cnsb.usps.com/history/orders/*",
     "https://sellercentral.amazon.com/orders-v3/order/*"
   ]
 } 
