@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Hello World Extension",
+  "name": "GBV Extension For Veeqo",
   "version": "1.0",
-  "description": "A simple Chrome extension that says Hello World.",
+  "description": "The supporting extension for GBV to work with Veeqo",
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
