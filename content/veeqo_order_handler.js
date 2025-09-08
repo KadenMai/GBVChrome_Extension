@@ -442,13 +442,21 @@ function printDeliveryInstructions(order) {
           background-color: #f9f9f9;
           font-weight: bold;
         }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            border-top: 2px solid #000;
+            padding-top: 5px;
+            text-align: center;
+        }
         @media print {
           body { margin: 0; padding: 5px; }
           .no-print { display: none; }
         }
       </style>
     </head>
-    <body>
+    <body>      
       <div class="header">DELIVERY INSTRUCTIONS</div>
       
       <div class="field">
@@ -479,6 +487,11 @@ function printDeliveryInstructions(order) {
       <div class="no-print" style="margin-top: 20px; text-align: center;">
         <button onclick="window.print()" style="padding: 10px 20px; font-size: 14px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Print 4x6 Label</button>
         <button onclick="window.close()" style="padding: 10px 20px; font-size: 14px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
+      </div>
+
+      <div class="footer">
+        <div class="value">Thanks for shopping with GocBepViet</div><br
+        <div class="value">https://gocbepviet.com/</div>
       </div>
     </body>
     </html>
