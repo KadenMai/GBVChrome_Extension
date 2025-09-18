@@ -373,7 +373,7 @@ function addInstructionButtonsToOrders() {
             const instructionBtn = document.createElement('button');
             instructionBtn.textContent = 'Instruction';
             instructionBtn.className = 'instruction-btn btn btn-warning btn-sm';
-            instructionBtn.style.cssText = 'margin-left: 5px; padding: 4px 8px; font-size: 12px; background: orange; color: white; border: none; border-radius: 3px;';
+            instructionBtn.style.cssText = 'margin-left: 5px; padding: 4px 8px; font-size: 12px; background: orange; color: red; border: none; border-radius: 3px;';
             
             instructionBtn.addEventListener('click', () => {
               printDeliveryInstructions(matchingOrder);
